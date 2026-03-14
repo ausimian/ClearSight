@@ -7,27 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A10001 /* ClearSightApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001; };
-		A10002 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002; };
-		A10003 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003; };
-		A10004 /* CalibrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004; };
-		A10005 /* CalibrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10005; };
-		A10006 /* EyeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10006; };
-		A10007 /* EyeTestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007; };
-		A10008 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008; };
-		A10009 /* EyeCoverPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009; };
-		A10010 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10010; };
-		A10011 /* ResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10011; };
-		A10012 /* ARFaceTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10012; };
-		A10013 /* DistanceMeasurementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10013; };
-		A10014 /* EyeTestScoringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10014; };
-		A10015 /* TestSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10015; };
-		A10016 /* EyeTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10016; };
-		A10017 /* VisualAcuityScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10017; };
-		A10018 /* ChartScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10018; };
-		A10019 /* AccessibilityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10019; };
-		A10020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10020; };
-		A10021 /* SpeechRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10021; };
+		A10001 /* ClearSightApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001 /* ClearSightApp.swift */; };
+		A10002 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002 /* OnboardingView.swift */; };
+		A10003 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003 /* OnboardingViewModel.swift */; };
+		A10004 /* CalibrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004 /* CalibrationView.swift */; };
+		A10005 /* CalibrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10005 /* CalibrationViewModel.swift */; };
+		A10006 /* EyeTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10006 /* EyeTestView.swift */; };
+		A10007 /* EyeTestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007 /* EyeTestViewModel.swift */; };
+		A10008 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008 /* ChartView.swift */; };
+		A10009 /* EyeCoverPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* EyeCoverPromptView.swift */; };
+		A10010 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10010 /* ResultsView.swift */; };
+		A10011 /* ResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10011 /* ResultsViewModel.swift */; };
+		A10012 /* ARFaceTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10012 /* ARFaceTrackingService.swift */; };
+		A10013 /* DistanceMeasurementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10013 /* DistanceMeasurementService.swift */; };
+		A10014 /* EyeTestScoringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10014 /* EyeTestScoringService.swift */; };
+		A10015 /* TestSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10015 /* TestSession.swift */; };
+		A10016 /* EyeTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10016 /* EyeTestResult.swift */; };
+		A10017 /* VisualAcuityScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10017 /* VisualAcuityScale.swift */; };
+		A10018 /* ChartScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10018 /* ChartScaler.swift */; };
+		A10019 /* AccessibilityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10019 /* AccessibilityHelper.swift */; };
+		A10020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10020 /* Assets.xcassets */; };
+		A10021 /* SpeechRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10021 /* SpeechRecognitionService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +66,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C10000 /* Root */ = {
+		C10000 = {
 			isa = PBXGroup;
 			children = (
 				C10001 /* ClearSight */,
@@ -233,7 +233,7 @@
 				en,
 				Base,
 			);
-			mainGroup = C10000 /* Root */;
+			mainGroup = C10000;
 			productRefGroup = C10099 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -409,7 +409,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = HGFA878PUD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "ClearSight uses the TrueDepth camera to measure your distance from the screen and track your eyes during the test.";
@@ -441,7 +441,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = HGFA878PUD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "ClearSight uses the TrueDepth camera to measure your distance from the screen and track your eyes during the test.";
@@ -469,15 +469,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F10005 /* Build configuration list for PBXProject "ClearSight" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				G10001 /* Debug */,
-				G10002 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		F10004 /* Build configuration list for PBXNativeTarget "ClearSight" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -487,8 +478,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F10005 /* Build configuration list for PBXProject "ClearSight" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G10001 /* Debug */,
+				G10002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = F10000 /* Project object */;
 }
