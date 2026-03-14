@@ -63,8 +63,12 @@ struct EyeTestView: View {
             // Progress indicator
             progressIndicator
 
-            // Letter input grid
-            letterInputGrid
+            // Letter input — tap grid or voice indicator
+            if viewModel.inputMode == .tap {
+                letterInputGrid
+            } else {
+                voiceInputView
+            }
 
             // Skip/Can't read button
             Button("Can't read this line") {
@@ -85,6 +89,14 @@ struct EyeTestView: View {
                 )
                 .font(.headline)
             }
+
+            Button {
+                viewModel.toggleInputMode()
+            } label: {
+                Image(systemName: viewModel.inputMode == .tap ? "mic.fill" : "hand.tap.fill")
+                    .font(.subheadline)
+            }
+            .accessibilityLabel(viewModel.inputMode == .tap ? "Switch to voice input" : "Switch to tap input")
 
             Spacer()
 
@@ -128,6 +140,49 @@ struct EyeTestView: View {
         if index < currentRow { return .green }
         if index == currentRow { return .accentColor }
         return .secondary.opacity(0.2)
+    }
+
+    // MARK: - Voice Input
+
+    private var voiceInputView: some View {
+        VStack(spacing: 12) {
+            // Last recognized letter
+            if let letter = viewModel.speechService.lastRecognizedLetter {
+                Text(String(letter))
+                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .foregroundStyle(.tint)
+                    .transition(.scale.combined(with: .opacity))
+                    .id(viewModel.userResponses.count) // re-animate on each new letter
+            }
+
+            // Listening indicator
+            HStack(spacing: 8) {
+                Image(systemName: "mic.fill")
+                    .foregroundStyle(.red)
+                    .symbolEffect(.pulse)
+                Text("Listening — say each letter aloud")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            // Valid letters reference
+            HStack(spacing: 6) {
+                ForEach(VisualAcuityScale.sloanLetters, id: \.self) { letter in
+                    Text(String(letter))
+                        .font(.caption2.bold())
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .padding(.top, 4)
+
+            if let error = viewModel.speechService.error {
+                Text(error.localizedDescription)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+        }
+        .frame(height: 140)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.speechService.lastRecognizedLetter)
     }
 
     // MARK: - Letter Input

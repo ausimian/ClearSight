@@ -13,6 +13,9 @@ final class EyeTestViewModel: ObservableObject {
     @Published var currentLetterHeight: CGFloat = 20
     @Published var distanceCm: Float = 33
     @Published var result: EyeTestResult?
+    @Published var inputMode: InputMode = .tap
+
+    let speechService = SpeechRecognitionService()
 
     // MARK: - Private
 
@@ -39,6 +42,15 @@ final class EyeTestViewModel: ObservableObject {
             .sink { [weak self] dist in
                 self?.distanceCm = dist
                 self?.updateLetterHeight()
+            }
+            .store(in: &cancellables)
+
+        // Subscribe to speech recognition results
+        speechService.recognizedLetterPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] letter in
+                guard let self, self.inputMode == .voice else { return }
+                self.submitLetter(letter)
             }
             .store(in: &cancellables)
 
@@ -74,6 +86,22 @@ final class EyeTestViewModel: ObservableObject {
         }
     }
 
+    func toggleInputMode() {
+        if inputMode == .tap {
+            Task {
+                let authorized = await speechService.requestAuthorization()
+                guard authorized else { return }
+                inputMode = .voice
+                if case .testingEye = testState {
+                    try? speechService.startListening()
+                }
+            }
+        } else {
+            speechService.stopListening()
+            inputMode = .tap
+        }
+    }
+
     func skipRow() {
         guard case .testingEye(let eye, _) = testState else { return }
         // Fill remaining responses with blanks (wrong answers)
@@ -96,6 +124,10 @@ final class EyeTestViewModel: ObservableObject {
         currentLetters = rows[index].letters
         userResponses = []
         updateLetterHeight()
+
+        if inputMode == .voice {
+            try? speechService.startListening()
+        }
     }
 
     private func completeCurrentRow(eye: Eye) {
@@ -128,7 +160,14 @@ final class EyeTestViewModel: ObservableObject {
         }
     }
 
+    private func stopVoiceIfNeeded() {
+        if inputMode == .voice {
+            speechService.stopListening()
+        }
+    }
+
     private func finishEye(_ eye: Eye) {
+        stopVoiceIfNeeded()
         if eye == .right {
             // Move to left eye
             testState = .coveringEye(which: .right)
@@ -156,6 +195,7 @@ final class EyeTestViewModel: ObservableObject {
     }
 
     func resetTest() {
+        speechService.reset()
         cancellables.removeAll()
         testState = .idle
         result = nil

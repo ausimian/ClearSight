@@ -20,6 +20,12 @@ enum Eye: String, Codable {
     }
 }
 
+/// How the user identifies chart letters.
+enum InputMode: String, CaseIterable {
+    case tap
+    case voice
+}
+
 /// State machine for the eye test flow.
 enum TestState: Equatable {
     case idle
