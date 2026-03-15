@@ -20,8 +20,8 @@ struct ResultsView: View {
 
                 // Eye results
                 HStack(spacing: 16) {
-                    eyeResultCard(title: "Right Eye", score: result.rightEye)
                     eyeResultCard(title: "Left Eye", score: result.leftEye)
+                    eyeResultCard(title: "Right Eye", score: result.rightEye)
                 }
                 .padding(.horizontal)
 

@@ -160,13 +160,26 @@ struct EyeTestView: View {
                 }
                 .padding()
             } else {
-                // Last recognized letter
-                if let letter = viewModel.speechService.lastRecognizedLetter {
-                    Text(String(letter))
-                        .font(.system(size: 48, weight: .bold, design: .rounded))
-                        .foregroundStyle(.tint)
-                        .transition(.scale.combined(with: .opacity))
-                        .id(viewModel.userResponses.count) // re-animate on each new letter
+                // Last recognized letter with undo
+                HStack(spacing: 16) {
+                    if let letter = viewModel.speechService.lastRecognizedLetter {
+                        Text(String(letter))
+                            .font(.system(size: 48, weight: .bold, design: .rounded))
+                            .foregroundStyle(.tint)
+                            .transition(.scale.combined(with: .opacity))
+                            .id(viewModel.userResponses.count)
+                    }
+
+                    if !viewModel.userResponses.isEmpty {
+                        Button {
+                            viewModel.undoLastLetter()
+                        } label: {
+                            Image(systemName: "arrow.uturn.backward.circle.fill")
+                                .font(.title)
+                                .foregroundStyle(.orange)
+                        }
+                        .accessibilityLabel("Undo last letter")
+                    }
                 }
 
                 // Listening indicator with processing state

@@ -118,6 +118,13 @@ final class EyeTestViewModel: ObservableObject {
         }
     }
 
+    func undoLastLetter() {
+        guard case .testingEye = testState else { return }
+        guard !userResponses.isEmpty else { return }
+        userResponses.removeLast()
+        HapticFeedback.letterTapped()
+    }
+
     func skipRow() {
         guard case .testingEye(let eye, _) = testState else { return }
         // Fill remaining responses with blanks (wrong answers)
