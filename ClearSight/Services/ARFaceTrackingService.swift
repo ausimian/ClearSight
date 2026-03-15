@@ -65,9 +65,25 @@ extension ARFaceTrackingService: ARSessionDelegate {
             return
         }
 
-        // Distance: Z component of the face transform (negative in ARKit, facing camera)
-        let rawDistanceCm = -faceAnchor.transform.columns.3.z * 100
-        let smoothed = smoothedDistance(rawDistanceCm)
+        // Distance: Calculate from camera to face, then adjust for eye-to-screen distance
+        // ARKit gives us camera-to-face distance (Z component, negative because camera faces user)
+        let cameraToFaceZ = -faceAnchor.transform.columns.3.z * 100  // in cm
+        
+        // On iPhones, the camera sits above the screen. When the user looks at the center
+        // of the screen (not the camera), we need to account for the vertical offset.
+        // The camera is typically ~1.5-2cm above the top edge, and the user looks at
+        // approximately the center of the screen.
+        //
+        // This creates a right triangle where:
+        // - Z distance (depth) = camera to face
+        // - Y distance (vertical) = camera to center of screen
+        // - Hypotenuse = actual eye-to-viewing-point distance
+        
+        let cameraOffsetFromScreenCenterCm: Float = 8.0  // Approximate for most iPhones
+        
+        // Calculate actual viewing distance using Pythagorean theorem
+        let actualDistanceCm = sqrt(pow(cameraToFaceZ, 2) + pow(cameraOffsetFromScreenCenterCm, 2))
+        let smoothed = smoothedDistance(actualDistanceCm)
 
         // Eye blinks from blend shapes
         let leftBlink = faceAnchor.blendShapes[.eyeBlinkLeft]?.floatValue ?? 0

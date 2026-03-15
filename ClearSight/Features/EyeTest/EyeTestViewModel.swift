@@ -13,7 +13,6 @@ final class EyeTestViewModel: ObservableObject {
     @Published var currentLetterHeight: CGFloat = 20
     @Published var distanceCm: Float = 33
     @Published var result: EyeTestResult?
-    @Published var inputMode: InputMode = .tap
 
     let speechService = SpeechRecognitionService()
 
@@ -49,8 +48,7 @@ final class EyeTestViewModel: ObservableObject {
         speechService.recognizedLetterPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] letter in
-                guard let self, self.inputMode == .voice else { return }
-                self.submitLetter(letter)
+                self?.submitLetter(letter)
             }
             .store(in: &cancellables)
 
@@ -68,37 +66,55 @@ final class EyeTestViewModel: ObservableObject {
         let rows = (which == .right) ? rightEyeRows : leftEyeRows
         guard !rows.isEmpty else { return }
 
-        loadRow(index: 0, eye: which)
+        // Set up the first row (without starting speech yet)
+        currentRowIndex = 0
+        currentRow = rows[0].row
+        currentLetters = rows[0].letters
+        userResponses = []
+        updateLetterHeight()
+        
         testState = .testingEye(which: which, currentRow: 0)
+        
+        // Always request speech authorization and start listening
+        Task {
+            let authorized = await speechService.requestAuthorization()
+            guard authorized else {
+                print("⚠️ Speech recognition not authorized: \(speechService.authorizationStatus)")
+                return
+            }
+            
+            // Clear any stale recognition results
+            speechService.lastRecognizedLetter = nil
+            
+            // Small delay to ensure clean start
+            try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
+            
+            do {
+                try speechService.startListening()
+                print("✓ Speech recognition started successfully")
+            } catch {
+                print("❌ Failed to start listening: \(error)")
+            }
+        }
     }
 
     func submitLetter(_ letter: Character) {
         guard case .testingEye(let eye, _) = testState else { return }
 
+        let rows = (eye == .right) ? rightEyeRows : leftEyeRows
+        let expectedCount = rows[currentRowIndex].letters.count
+        
+        // Ignore letters if we've already completed this row
+        guard userResponses.count < expectedCount else {
+            print("⚠️ Ignoring extra letter '\(letter)' - row already complete")
+            return
+        }
+
         HapticFeedback.letterTapped()
         userResponses.append(letter)
 
-        let rows = (eye == .right) ? rightEyeRows : leftEyeRows
-        let expectedCount = rows[currentRowIndex].letters.count
-
         if userResponses.count >= expectedCount {
             completeCurrentRow(eye: eye)
-        }
-    }
-
-    func toggleInputMode() {
-        if inputMode == .tap {
-            Task {
-                let authorized = await speechService.requestAuthorization()
-                guard authorized else { return }
-                inputMode = .voice
-                if case .testingEye = testState {
-                    try? speechService.startListening()
-                }
-            }
-        } else {
-            speechService.stopListening()
-            inputMode = .tap
         }
     }
 
@@ -125,8 +141,20 @@ final class EyeTestViewModel: ObservableObject {
         userResponses = []
         updateLetterHeight()
 
-        if inputMode == .voice {
-            try? speechService.startListening()
+        // Stop listening and clear any pending recognition
+        speechService.stopListening()
+        speechService.lastRecognizedLetter = nil
+        
+        // Small delay to ensure previous session is fully stopped
+        Task {
+            try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
+            
+            do {
+                try speechService.startListening()
+                print("✓ Restarted speech recognition for new row")
+            } catch {
+                print("❌ Failed to restart listening: \(error)")
+            }
         }
     }
 
@@ -160,14 +188,12 @@ final class EyeTestViewModel: ObservableObject {
         }
     }
 
-    private func stopVoiceIfNeeded() {
-        if inputMode == .voice {
-            speechService.stopListening()
-        }
+    private func stopVoice() {
+        speechService.stopListening()
     }
 
     private func finishEye(_ eye: Eye) {
-        stopVoiceIfNeeded()
+        stopVoice()
         if eye == .right {
             // Move to left eye
             testState = .coveringEye(which: .right)

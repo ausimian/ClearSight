@@ -62,13 +62,12 @@ struct EyeTestView: View {
 
             // Progress indicator
             progressIndicator
+            
+            // Letter counter showing progress through current row
+            letterProgressView
 
-            // Letter input — tap grid or voice indicator
-            if viewModel.inputMode == .tap {
-                letterInputGrid
-            } else {
-                voiceInputView
-            }
+            // Voice input
+            voiceInputView
 
             // Skip/Can't read button
             Button("Can't read this line") {
@@ -89,14 +88,6 @@ struct EyeTestView: View {
                 )
                 .font(.headline)
             }
-
-            Button {
-                viewModel.toggleInputMode()
-            } label: {
-                Image(systemName: viewModel.inputMode == .tap ? "mic.fill" : "hand.tap.fill")
-                    .font(.subheadline)
-            }
-            .accessibilityLabel(viewModel.inputMode == .tap ? "Switch to voice input" : "Switch to tap input")
 
             Spacer()
 
@@ -138,7 +129,7 @@ struct EyeTestView: View {
             return .secondary.opacity(0.2)
         }
         if index < currentRow { return .green }
-        if index == currentRow { return .accentColor }
+        if index == currentRow { return .blue }
         return .secondary.opacity(0.2)
     }
 
@@ -146,65 +137,100 @@ struct EyeTestView: View {
 
     private var voiceInputView: some View {
         VStack(spacing: 12) {
-            // Last recognized letter
-            if let letter = viewModel.speechService.lastRecognizedLetter {
-                Text(String(letter))
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
-                    .foregroundStyle(.tint)
-                    .transition(.scale.combined(with: .opacity))
-                    .id(viewModel.userResponses.count) // re-animate on each new letter
-            }
-
-            // Listening indicator
-            HStack(spacing: 8) {
-                Image(systemName: "mic.fill")
-                    .foregroundStyle(.red)
-                    .symbolEffect(.pulse)
-                Text("Listening — say each letter aloud")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
-            // Valid letters reference
-            HStack(spacing: 6) {
-                ForEach(VisualAcuityScale.sloanLetters, id: \.self) { letter in
-                    Text(String(letter))
-                        .font(.caption2.bold())
-                        .foregroundStyle(.tertiary)
-                }
-            }
-            .padding(.top, 4)
-
+            // Error state
             if let error = viewModel.speechService.error {
-                Text(error.localizedDescription)
-                    .font(.caption)
-                    .foregroundStyle(.red)
+                VStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.largeTitle)
+                        .foregroundStyle(.red)
+                    Text(error.localizedDescription)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .multilineTextAlignment(.center)
+                    
+                    if viewModel.speechService.authorizationStatus == .denied {
+                        Button("Open Settings") {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+                }
+                .padding()
+            } else {
+                // Last recognized letter
+                if let letter = viewModel.speechService.lastRecognizedLetter {
+                    Text(String(letter))
+                        .font(.system(size: 48, weight: .bold, design: .rounded))
+                        .foregroundStyle(.tint)
+                        .transition(.scale.combined(with: .opacity))
+                        .id(viewModel.userResponses.count) // re-animate on each new letter
+                }
+
+                // Listening indicator
+                if viewModel.speechService.isListening {
+                    HStack(spacing: 8) {
+                        Image(systemName: "mic.fill")
+                            .foregroundStyle(.green)
+                            .symbolEffect(.variableColor.iterative.reversing, options: .repeating)
+                        Text("Listening — say each letter aloud")
+                            .font(.subheadline)
+                            .foregroundStyle(.green)
+                    }
+                } else {
+                    HStack(spacing: 8) {
+                        Image(systemName: "mic.slash.fill")
+                            .foregroundStyle(.secondary)
+                        Text("Microphone not active")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // Valid letters reference
+                HStack(spacing: 6) {
+                    ForEach(VisualAcuityScale.sloanLetters, id: \.self) { letter in
+                        Text(String(letter))
+                            .font(.caption2.bold())
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+                .padding(.top, 4)
             }
         }
         .frame(height: 140)
         .animation(.easeInOut(duration: 0.2), value: viewModel.speechService.lastRecognizedLetter)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.speechService.error)
     }
-
-    // MARK: - Letter Input
-
-    private var letterInputGrid: some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
-
-        return LazyVGrid(columns: columns, spacing: 8) {
-            ForEach(VisualAcuityScale.sloanLetters, id: \.self) { letter in
-                Button {
-                    viewModel.submitLetter(letter)
-                } label: {
-                    Text(String(letter))
-                        .font(.title2.bold())
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.accentColor.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+    
+    private var letterProgressView: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "arrow.right.circle.fill")
+                .foregroundStyle(.blue)
+                .imageScale(.small)
+            
+            Text("Letter \(viewModel.userResponses.count + 1) of \(viewModel.currentLetters.count)")
+                .font(.caption.bold())
+                .foregroundStyle(.secondary)
+            
+            // Show recent responses
+            if !viewModel.userResponses.isEmpty {
+                HStack(spacing: 4) {
+                    Text("•")
+                        .foregroundStyle(.tertiary)
+                    
+                    Text(viewModel.userResponses.map { String($0) }.joined(separator: " "))
+                        .font(.caption.monospaced())
+                        .foregroundStyle(.tertiary)
                 }
-                .buttonStyle(.plain)
             }
         }
+        .padding(.vertical, 8)
+        .padding(.horizontal)
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal)
         .padding(.bottom, 8)
     }

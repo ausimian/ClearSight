@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>ClearSight uses speech recognition to allow hands-free input of letters during the eye test.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>ClearSight needs microphone access for voice-based letter input during the eye test.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ClearSight uses the camera to measure your distance from the screen and ensure accurate vision testing.</string>
+</dict>
+</plist>

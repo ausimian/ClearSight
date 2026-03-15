@@ -2,7 +2,7 @@ import Speech
 import AVFoundation
 import Combine
 
-enum SpeechError: Error, LocalizedError {
+enum SpeechError: Error, LocalizedError, Equatable {
     case notAuthorized
     case notAvailable
     case audioSessionFailed
@@ -103,11 +103,18 @@ final class SpeechRecognitionService: ObservableObject {
 
         let request = SFSpeechAudioBufferRecognitionRequest()
         request.shouldReportPartialResults = true
-        request.requiresOnDeviceRecognition = true
+        // Allow fallback to server-based recognition if on-device is unavailable
+        request.requiresOnDeviceRecognition = false
         recognitionRequest = request
 
         let inputNode = audioEngine.inputNode
         let recordingFormat = inputNode.outputFormat(forBus: 0)
+        
+        // Remove any existing tap first
+        if audioEngine.inputNode.numberOfInputs > 0 {
+            inputNode.removeTap(onBus: 0)
+        }
+        
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
             request.append(buffer)
         }
@@ -160,6 +167,10 @@ final class SpeechRecognitionService: ObservableObject {
     private func handleRecognitionResult(result: SFSpeechRecognitionResult?, error: Error?) {
         guard let result else {
             if let error {
+                // Don't surface cancellation errors — expected when stopping/restarting
+                let nsError = error as NSError
+                if nsError.domain == "kAFAssistantErrorDomain" && nsError.code == 1110 { return }
+                if error.localizedDescription.lowercased().contains("cancel") { return }
                 self.error = .recognitionFailed(error.localizedDescription)
             }
             return
