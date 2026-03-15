@@ -19,6 +19,39 @@ struct SnellenRow: Identifiable {
     }
 }
 
+/// Direction the tumbling E optotype is pointing.
+enum EDirection: CaseIterable {
+    case up, down, left, right
+
+    /// Rotation angle to apply to a right-facing "E" glyph.
+    var rotationDegrees: Double {
+        switch self {
+        case .right: return 0
+        case .down:  return 90
+        case .left:  return 180
+        case .up:    return 270
+        }
+    }
+
+    var arrowSymbol: String {
+        switch self {
+        case .up:    return "arrow.up"
+        case .down:  return "arrow.down"
+        case .left:  return "arrow.left"
+        case .right: return "arrow.right"
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .up:    return "Up"
+        case .down:  return "Down"
+        case .left:  return "Left"
+        case .right: return "Right"
+        }
+    }
+}
+
 enum VisualAcuityScale {
     /// Standard Snellen rows from largest (worst acuity) to smallest (best acuity).
     /// Reference heights calculated from the standard: 6/6 letter subtends 5 arcmin at 6m = 8.73mm.
@@ -37,16 +70,12 @@ enum VisualAcuityScale {
         SnellenRow(acuity: "6/4",  logMAR: -0.2, referenceHeightMM: 5.82, letterCount: 8),
     ]
 
-    /// Sloan letters — the standard optotype set used in clinical charts.
-    /// These letters are chosen because they are equally legible at small sizes.
-    static let sloanLetters: [Character] = ["C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"]
-
-    /// Generate a randomised set of letters for a given row.
+    /// Generate a randomised set of directions for a given row.
     /// No consecutive duplicates, matching clinical chart conventions.
-    static func randomLetters(count: Int) -> [Character] {
-        var result: [Character] = []
+    static func randomDirections(count: Int) -> [EDirection] {
+        var result: [EDirection] = []
         for _ in 0..<count {
-            let candidates = sloanLetters.filter { $0 != result.last }
+            let candidates = EDirection.allCases.filter { $0 != result.last }
             result.append(candidates.randomElement()!)
         }
         return result

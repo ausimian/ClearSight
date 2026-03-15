@@ -28,7 +28,6 @@
 		A10018 /* ChartScaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10018 /* ChartScaler.swift */; };
 		A10019 /* AccessibilityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10019 /* AccessibilityHelper.swift */; };
 		A10020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10020 /* Assets.xcassets */; };
-		A10021 /* SpeechRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10021 /* SpeechRecognitionService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,7 +53,6 @@
 		B10018 /* ChartScaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartScaler.swift; sourceTree = "<group>"; };
 		B10019 /* AccessibilityHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityHelper.swift; sourceTree = "<group>"; };
 		B10020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B10021 /* SpeechRecognitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognitionService.swift; sourceTree = "<group>"; };
 		D10001 /* ClearSight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearSight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -155,7 +153,6 @@
 				B10012 /* ARFaceTrackingService.swift */,
 				B10013 /* DistanceMeasurementService.swift */,
 				B10014 /* EyeTestScoringService.swift */,
-				B10021 /* SpeechRecognitionService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -284,7 +281,6 @@
 				A10018 /* ChartScaler.swift in Sources */,
 				0126818B2F662FFE00C3BFAD /* AppDelegate.swift in Sources */,
 				A10019 /* AccessibilityHelper.swift in Sources */,
-				A10021 /* SpeechRecognitionService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,8 +419,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "ClearSight uses the camera to measure your distance from the screen and ensure accurate vision testing.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "ClearSight needs microphone access for voice-based letter input during the eye test.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "ClearSight uses speech recognition to allow hands-free input of letters during the eye test.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "ClearSight needs microphone access for AR face tracking during the eye test.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -455,8 +450,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "ClearSight uses the camera to measure your distance from the screen and ensure accurate vision testing.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "ClearSight needs microphone access for voice-based letter input during the eye test.";
-				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "ClearSight uses speech recognition to allow hands-free input of letters during the eye test.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "ClearSight needs microphone access for AR face tracking during the eye test.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

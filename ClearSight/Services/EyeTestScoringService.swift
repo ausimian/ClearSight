@@ -1,14 +1,14 @@
 import Foundation
 import UIKit
 
-/// Manages test progression and scoring. Generates letter rows, records
+/// Manages test progression and scoring. Generates direction rows, records
 /// responses, and computes the final EyeScore for each eye.
 final class EyeTestScoringService {
 
-    /// Generate a fresh set of randomised letters for all rows.
-    func generateTestRows() -> [(row: SnellenRow, letters: [Character])] {
+    /// Generate a fresh set of randomised directions for all rows.
+    func generateTestRows() -> [(row: SnellenRow, directions: [EDirection])] {
         VisualAcuityScale.standardRows.map { row in
-            (row: row, letters: VisualAcuityScale.randomLetters(count: row.letterCount))
+            (row: row, directions: VisualAcuityScale.randomDirections(count: row.letterCount))
         }
     }
 

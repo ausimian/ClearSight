@@ -7,20 +7,18 @@ final class EyeTestViewModel: ObservableObject {
     // MARK: - Published State
 
     @Published var testState: TestState = .idle
-    @Published var currentLetters: [Character] = []
+    @Published var currentDirections: [EDirection] = []
     @Published var currentRow: SnellenRow?
-    @Published var userResponses: [Character] = []
+    @Published var userResponses: [EDirection] = []
     @Published var currentLetterHeight: CGFloat = 20
     @Published var distanceCm: Float = 33
     @Published var result: EyeTestResult?
 
-    let speechService = SpeechRecognitionService()
-
     // MARK: - Private
 
     private let scoringService = EyeTestScoringService()
-    private var rightEyeRows: [(row: SnellenRow, letters: [Character])] = []
-    private var leftEyeRows: [(row: SnellenRow, letters: [Character])] = []
+    private var rightEyeRows: [(row: SnellenRow, directions: [EDirection])] = []
+    private var leftEyeRows: [(row: SnellenRow, directions: [EDirection])] = []
     private var rightEyeAttempts: [RowAttempt] = []
     private var leftEyeAttempts: [RowAttempt] = []
     private var currentRowIndex = 0
@@ -29,7 +27,7 @@ final class EyeTestViewModel: ObservableObject {
     // MARK: - Test Flow
 
     func startTest(arService: ARFaceTrackingService) {
-        // Generate randomised letter sets for both eyes
+        // Generate randomised direction sets for both eyes
         rightEyeRows = scoringService.generateTestRows()
         leftEyeRows = scoringService.generateTestRows()
         rightEyeAttempts = []
@@ -41,14 +39,6 @@ final class EyeTestViewModel: ObservableObject {
             .sink { [weak self] dist in
                 self?.distanceCm = dist
                 self?.updateLetterHeight()
-            }
-            .store(in: &cancellables)
-
-        // Subscribe to speech recognition results
-        speechService.recognizedLetterPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] letter in
-                self?.submitLetter(letter)
             }
             .store(in: &cancellables)
 
@@ -68,38 +58,31 @@ final class EyeTestViewModel: ObservableObject {
 
         currentRowIndex = 0
         currentRow = rows[0].row
-        currentLetters = rows[0].letters
+        currentDirections = rows[0].directions
         userResponses = []
         updateLetterHeight()
 
         testState = .testingEye(which: which, currentRow: 0)
-
-        // Start listening — permissions already granted at onboarding
-        speechService.lastRecognizedLetter = nil
-        try? speechService.startListening()
     }
 
-    func submitLetter(_ letter: Character) {
+    func submitDirection(_ direction: EDirection) {
         guard case .testingEye(let eye, _) = testState else { return }
 
         let rows = (eye == .right) ? rightEyeRows : leftEyeRows
-        let expectedCount = rows[currentRowIndex].letters.count
-        
-        // Ignore letters if we've already completed this row
-        guard userResponses.count < expectedCount else {
-            print("⚠️ Ignoring extra letter '\(letter)' - row already complete")
-            return
-        }
+        let expectedCount = rows[currentRowIndex].directions.count
+
+        // Ignore input if we've already completed this row
+        guard userResponses.count < expectedCount else { return }
 
         HapticFeedback.letterTapped()
-        userResponses.append(letter)
+        userResponses.append(direction)
 
         if userResponses.count >= expectedCount {
             completeCurrentRow(eye: eye)
         }
     }
 
-    func undoLastLetter() {
+    func undoLastResponse() {
         guard case .testingEye = testState else { return }
         guard !userResponses.isEmpty else { return }
         userResponses.removeLast()
@@ -108,11 +91,13 @@ final class EyeTestViewModel: ObservableObject {
 
     func skipRow() {
         guard case .testingEye(let eye, _) = testState else { return }
-        // Fill remaining responses with blanks (wrong answers)
+        // Fill remaining responses with a guaranteed-wrong direction
         let rows = (eye == .right) ? rightEyeRows : leftEyeRows
-        let remaining = rows[currentRowIndex].letters.count - userResponses.count
-        for _ in 0..<remaining {
-            userResponses.append("?")
+        let shown = rows[currentRowIndex].directions
+        let filled = userResponses.count
+        for i in filled..<shown.count {
+            let wrong = EDirection.allCases.first { $0 != shown[i] }!
+            userResponses.append(wrong)
         }
         completeCurrentRow(eye: eye)
     }
@@ -125,32 +110,16 @@ final class EyeTestViewModel: ObservableObject {
 
         currentRowIndex = index
         currentRow = rows[index].row
-        currentLetters = rows[index].letters
+        currentDirections = rows[index].directions
         userResponses = []
         updateLetterHeight()
-
-        // Stop listening and clear any pending recognition
-        speechService.stopListening()
-        speechService.lastRecognizedLetter = nil
-        
-        // Small delay to ensure previous session is fully stopped
-        Task {
-            try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 seconds
-            
-            do {
-                try speechService.startListening()
-                print("✓ Restarted speech recognition for new row")
-            } catch {
-                print("❌ Failed to restart listening: \(error)")
-            }
-        }
     }
 
     private func completeCurrentRow(eye: Eye) {
         let rows = (eye == .right) ? rightEyeRows : leftEyeRows
         let attempt = RowAttempt(
             row: rows[currentRowIndex].row,
-            shownLetters: rows[currentRowIndex].letters,
+            shownDirections: rows[currentRowIndex].directions,
             userResponses: userResponses
         )
 
@@ -176,12 +145,7 @@ final class EyeTestViewModel: ObservableObject {
         }
     }
 
-    private func stopVoice() {
-        speechService.stopListening()
-    }
-
     private func finishEye(_ eye: Eye) {
-        stopVoice()
         if eye == .right {
             // Move to left eye
             testState = .coveringEye(which: .right)
@@ -209,11 +173,10 @@ final class EyeTestViewModel: ObservableObject {
     }
 
     func resetTest() {
-        speechService.reset()
         cancellables.removeAll()
         testState = .idle
         result = nil
-        currentLetters = []
+        currentDirections = []
         currentRow = nil
         userResponses = []
         rightEyeAttempts = []

@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Main test screen that orchestrates calibration, eye cover prompts,
-/// chart display, letter input, and results.
+/// chart display, directional input, and results.
 struct EyeTestView: View {
     @ObservedObject var arService: ARFaceTrackingService
     @StateObject private var viewModel = EyeTestViewModel()
@@ -50,9 +50,9 @@ struct EyeTestView: View {
 
             Spacer()
 
-            // Chart letters
+            // Chart — rotated E optotypes
             ChartView(
-                letters: viewModel.currentLetters,
+                directions: viewModel.currentDirections,
                 letterHeight: viewModel.currentLetterHeight,
                 userResponseCount: viewModel.userResponses.count
             )
@@ -62,12 +62,12 @@ struct EyeTestView: View {
 
             // Progress indicator
             progressIndicator
-            
-            // Letter counter showing progress through current row
-            letterProgressView
 
-            // Voice input
-            voiceInputView
+            // Direction progress
+            directionProgressView
+
+            // Directional input buttons
+            directionalInputView
 
             // Skip/Can't read button
             Button("Can't read this line") {
@@ -133,123 +133,71 @@ struct EyeTestView: View {
         return .secondary.opacity(0.2)
     }
 
-    // MARK: - Voice Input
+    // MARK: - Directional Input
 
-    private var voiceInputView: some View {
-        VStack(spacing: 12) {
-            // Error state
-            if let error = viewModel.speechService.error {
-                VStack(spacing: 8) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.largeTitle)
-                        .foregroundStyle(.red)
-                    Text(error.localizedDescription)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .multilineTextAlignment(.center)
-                    
-                    if viewModel.speechService.authorizationStatus == .denied {
-                        Button("Open Settings") {
-                            if let url = URL(string: UIApplication.openSettingsURLString) {
-                                UIApplication.shared.open(url)
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.small)
-                    }
+    private var directionalInputView: some View {
+        VStack(spacing: 8) {
+            // Undo button
+            if !viewModel.userResponses.isEmpty {
+                Button {
+                    viewModel.undoLastResponse()
+                } label: {
+                    Label("Undo", systemImage: "arrow.uturn.backward.circle.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(.orange)
                 }
-                .padding()
-            } else {
-                // Last recognized letter with undo
-                HStack(spacing: 16) {
-                    if let letter = viewModel.speechService.lastRecognizedLetter {
-                        Text(String(letter))
-                            .font(.system(size: 48, weight: .bold, design: .rounded))
-                            .foregroundStyle(.tint)
-                            .transition(.scale.combined(with: .opacity))
-                            .id(viewModel.userResponses.count)
-                    }
+                .padding(.bottom, 4)
+            }
 
-                    if !viewModel.userResponses.isEmpty {
-                        Button {
-                            viewModel.undoLastLetter()
-                        } label: {
-                            Image(systemName: "arrow.uturn.backward.circle.fill")
-                                .font(.title)
-                                .foregroundStyle(.orange)
-                        }
-                        .accessibilityLabel("Undo last letter")
-                    }
+            // Direction buttons in a cross layout
+            VStack(spacing: 4) {
+                directionButton(.up)
+
+                HStack(spacing: 24) {
+                    directionButton(.left)
+                    directionButton(.right)
                 }
 
-                // Listening indicator with processing state
-                if viewModel.speechService.isListening {
-                    if viewModel.speechService.isProcessing {
-                        // Processing speech
-                        HStack(spacing: 8) {
-                            ProgressView()
-                                .controlSize(.small)
-                            Text("Processing...")
-                                .font(.subheadline)
-                                .foregroundStyle(.orange)
-                        }
-                    } else {
-                        // Ready for input
-                        HStack(spacing: 8) {
-                            Image(systemName: "mic.fill")
-                                .foregroundStyle(.green)
-                                .symbolEffect(.variableColor.iterative.reversing, options: .repeating)
-                            Text("Ready — speak now")
-                                .font(.subheadline.bold())
-                                .foregroundStyle(.green)
-                        }
-                    }
-                } else {
-                    HStack(spacing: 8) {
-                        Image(systemName: "mic.slash.fill")
-                            .foregroundStyle(.secondary)
-                        Text("Microphone not active")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                // Valid letters reference
-                HStack(spacing: 6) {
-                    ForEach(VisualAcuityScale.sloanLetters, id: \.self) { letter in
-                        Text(String(letter))
-                            .font(.caption2.bold())
-                            .foregroundStyle(.tertiary)
-                    }
-                }
-                .padding(.top, 4)
+                directionButton(.down)
             }
         }
-        .frame(height: 140)
-        .animation(.easeInOut(duration: 0.2), value: viewModel.speechService.lastRecognizedLetter)
-        .animation(.easeInOut(duration: 0.2), value: viewModel.speechService.error)
-        .animation(.easeInOut(duration: 0.15), value: viewModel.speechService.isProcessing)
+        .padding(.vertical, 12)
+        .padding(.horizontal)
     }
-    
-    private var letterProgressView: some View {
+
+    private func directionButton(_ direction: EDirection) -> some View {
+        Button {
+            viewModel.submitDirection(direction)
+        } label: {
+            Image(systemName: direction.arrowSymbol)
+                .font(.system(size: 28, weight: .semibold))
+                .frame(width: 56, height: 56)
+                .background(.tint.opacity(0.15))
+                .clipShape(Circle())
+        }
+        .accessibilityLabel(direction.label)
+    }
+
+    private var directionProgressView: some View {
         HStack(spacing: 8) {
             Image(systemName: "arrow.right.circle.fill")
                 .foregroundStyle(.blue)
                 .imageScale(.small)
-            
-            Text("Letter \(viewModel.userResponses.count + 1) of \(viewModel.currentLetters.count)")
+
+            Text("\(viewModel.userResponses.count + 1) of \(viewModel.currentDirections.count)")
                 .font(.caption.bold())
                 .foregroundStyle(.secondary)
-            
-            // Show recent responses
+
             if !viewModel.userResponses.isEmpty {
                 HStack(spacing: 4) {
-                    Text("•")
+                    Text("·")
                         .foregroundStyle(.tertiary)
-                    
-                    Text(viewModel.userResponses.map { String($0) }.joined(separator: " "))
-                        .font(.caption.monospaced())
-                        .foregroundStyle(.tertiary)
+
+                    ForEach(0..<viewModel.userResponses.count, id: \.self) { i in
+                        Image(systemName: viewModel.userResponses[i].arrowSymbol)
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
                 }
             }
         }

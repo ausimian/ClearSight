@@ -1,17 +1,15 @@
 import AVFoundation
 import ARKit
-import Speech
 
 @MainActor
 final class OnboardingViewModel: ObservableObject {
     @Published var cameraAuthorized = false
     @Published var microphoneAuthorized = false
-    @Published var speechAuthorized = false
     @Published var deviceSupported = true
     @Published var hasCheckedPermissions = false
 
     var allPermissionsGranted: Bool {
-        cameraAuthorized && microphoneAuthorized && speechAuthorized
+        cameraAuthorized && microphoneAuthorized
     }
 
     var hasDeniedPermissions: Bool {
@@ -30,20 +28,10 @@ final class OnboardingViewModel: ObservableObject {
             cameraAuthorized = granted
         }
 
-        // Microphone
+        // Microphone (still needed for AR face tracking)
         if !microphoneAuthorized {
             let granted = await AVAudioApplication.requestRecordPermission()
             microphoneAuthorized = granted
-        }
-
-        // Speech recognition
-        if !speechAuthorized {
-            let status = await withCheckedContinuation { continuation in
-                SFSpeechRecognizer.requestAuthorization { status in
-                    continuation.resume(returning: status)
-                }
-            }
-            speechAuthorized = (status == .authorized)
         }
 
         hasCheckedPermissions = true
@@ -57,13 +45,8 @@ final class OnboardingViewModel: ObservableObject {
         // Microphone
         microphoneAuthorized = (AVAudioApplication.shared.recordPermission == .granted)
 
-        // Speech
-        let speechStatus = SFSpeechRecognizer.authorizationStatus()
-        speechAuthorized = (speechStatus == .authorized)
-
         // If any have been explicitly denied/granted, we've checked
         let cameraDetermined = cameraStatus != .notDetermined
-        let speechDetermined = speechStatus != .notDetermined
-        hasCheckedPermissions = cameraDetermined && speechDetermined
+        hasCheckedPermissions = cameraDetermined
     }
 }

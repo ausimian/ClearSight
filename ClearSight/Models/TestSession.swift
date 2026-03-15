@@ -20,12 +20,6 @@ enum Eye: String, Codable {
     }
 }
 
-/// How the user identifies chart letters.
-enum InputMode: String, CaseIterable {
-    case tap
-    case voice
-}
-
 /// State machine for the eye test flow.
 enum TestState: Equatable {
     case idle
@@ -46,26 +40,26 @@ enum TestState: Equatable {
     }
 }
 
-/// Tracks letters shown and user responses for a single row.
+/// Tracks directions shown and user responses for a single row.
 struct RowAttempt {
     let row: SnellenRow
-    let shownLetters: [Character]
-    var userResponses: [Character] = []
+    let shownDirections: [EDirection]
+    var userResponses: [EDirection] = []
 
     var isComplete: Bool {
-        userResponses.count >= shownLetters.count
+        userResponses.count >= shownDirections.count
     }
 
     var correctCount: Int {
-        zip(shownLetters, userResponses).filter { $0 == $1 }.count
+        zip(shownDirections, userResponses).filter { $0 == $1 }.count
     }
 
     var percentCorrect: Double {
-        guard !shownLetters.isEmpty else { return 0 }
-        return Double(correctCount) / Double(shownLetters.count)
+        guard !shownDirections.isEmpty else { return 0 }
+        return Double(correctCount) / Double(shownDirections.count)
     }
 
-    /// A line is passed if ≥60% of letters are correct.
+    /// A line is passed if >=60% of directions are correct.
     var passed: Bool {
         percentCorrect >= 0.6
     }

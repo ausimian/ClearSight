@@ -87,7 +87,6 @@ struct OnboardingView: View {
         VStack(spacing: 12) {
             permissionRow("Camera", granted: viewModel.cameraAuthorized)
             permissionRow("Microphone", granted: viewModel.microphoneAuthorized)
-            permissionRow("Speech Recognition", granted: viewModel.speechAuthorized)
 
             Text("All permissions are required. Please enable them in Settings.")
                 .font(.caption)
