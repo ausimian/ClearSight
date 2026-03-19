@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct ClearSightApp: App {
+struct AcuityProApp: App {
     @StateObject private var arService = ARFaceTrackingService()
 
     var body: some Scene {

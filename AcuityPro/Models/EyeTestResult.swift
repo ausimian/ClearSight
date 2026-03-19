@@ -51,7 +51,7 @@ struct EyeTestResult: Codable, Identifiable {
         formatter.timeStyle = .short
 
         return """
-        ClearSight Eye Test Results
+        AcuityPro Eye Test Results
         Date: \(formatter.string(from: date))
 
         Right Eye: \(rightEye.snellenFraction) (LogMAR \(String(format: "%.1f", rightEye.logMAR)))

@@ -15,7 +15,7 @@ struct OnboardingView: View {
                         .font(.system(size: 60))
                         .foregroundStyle(.tint)
 
-                    Text("ClearSight")
+                    Text("AcuityPro")
                         .font(.largeTitle.bold())
                 }
 

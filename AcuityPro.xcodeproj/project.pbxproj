@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0126818B2F662FFE00C3BFAD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0126818A2F662FFE00C3BFAD /* AppDelegate.swift */; };
-		A10001 /* ClearSightApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001 /* ClearSightApp.swift */; };
+		A10001 /* AcuityProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10001 /* AcuityProApp.swift */; };
 		A10002 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10002 /* OnboardingView.swift */; };
 		A10003 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003 /* OnboardingViewModel.swift */; };
 		A10004 /* CalibrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004 /* CalibrationView.swift */; };
@@ -33,7 +33,7 @@
 /* Begin PBXFileReference section */
 		012681892F652F6E00C3BFAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0126818A2F662FFE00C3BFAD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B10001 /* ClearSightApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearSightApp.swift; sourceTree = "<group>"; };
+		B10001 /* AcuityProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcuityProApp.swift; sourceTree = "<group>"; };
 		B10002 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		B10003 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		B10004 /* CalibrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationView.swift; sourceTree = "<group>"; };
@@ -53,7 +53,7 @@
 		B10018 /* ChartScaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartScaler.swift; sourceTree = "<group>"; };
 		B10019 /* AccessibilityHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityHelper.swift; sourceTree = "<group>"; };
 		B10020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D10001 /* ClearSight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClearSight.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D10001 /* AcuityPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcuityPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,13 +70,13 @@
 		C10000 = {
 			isa = PBXGroup;
 			children = (
-				C10001 /* ClearSight */,
+				C10001 /* AcuityPro */,
 				C10099 /* Products */,
 				012681892F652F6E00C3BFAD /* Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
-		C10001 /* ClearSight */ = {
+		C10001 /* AcuityPro */ = {
 			isa = PBXGroup;
 			children = (
 				C10002 /* App */,
@@ -86,13 +86,13 @@
 				C10010 /* Utilities */,
 				C10011 /* Resources */,
 			);
-			path = ClearSight;
+			path = AcuityPro;
 			sourceTree = "<group>";
 		};
 		C10002 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				B10001 /* ClearSightApp.swift */,
+				B10001 /* AcuityProApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -187,7 +187,7 @@
 		C10099 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D10001 /* ClearSight.app */,
+				D10001 /* AcuityPro.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -195,9 +195,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F10001 /* ClearSight */ = {
+		F10001 /* AcuityPro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F10004 /* Build configuration list for PBXNativeTarget "ClearSight" */;
+			buildConfigurationList = F10004 /* Build configuration list for PBXNativeTarget "AcuityPro" */;
 			buildPhases = (
 				F10002 /* Sources */,
 				E10001 /* Frameworks */,
@@ -207,9 +207,9 @@
 			);
 			dependencies = (
 			);
-			name = ClearSight;
-			productName = ClearSight;
-			productReference = D10001 /* ClearSight.app */;
+			name = AcuityPro;
+			productName = AcuityPro;
+			productReference = D10001 /* AcuityPro.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -227,7 +227,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F10005 /* Build configuration list for PBXProject "ClearSight" */;
+			buildConfigurationList = F10005 /* Build configuration list for PBXProject "AcuityPro" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -240,7 +240,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F10001 /* ClearSight */,
+				F10001 /* AcuityPro */,
 			);
 		};
 /* End PBXProject section */
@@ -261,7 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10001 /* ClearSightApp.swift in Sources */,
+				A10001 /* AcuityProApp.swift in Sources */,
 				A10002 /* OnboardingView.swift in Sources */,
 				A10003 /* OnboardingViewModel.swift in Sources */,
 				A10004 /* CalibrationView.swift in Sources */,
@@ -418,8 +418,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "ClearSight uses the camera to measure your distance from the screen and ensure accurate vision testing.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "ClearSight needs microphone access for AR face tracking during the eye test.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AcuityPro uses the camera to measure your distance from the screen and ensure accurate vision testing.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AcuityPro needs microphone access for AR face tracking during the eye test.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -429,7 +429,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.ausimian.clearsight;
+				PRODUCT_BUNDLE_IDENTIFIER = net.ausimian.acuitypro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -449,8 +449,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "ClearSight uses the camera to measure your distance from the screen and ensure accurate vision testing.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "ClearSight needs microphone access for AR face tracking during the eye test.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AcuityPro uses the camera to measure your distance from the screen and ensure accurate vision testing.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AcuityPro needs microphone access for AR face tracking during the eye test.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -460,7 +460,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.ausimian.clearsight;
+				PRODUCT_BUNDLE_IDENTIFIER = net.ausimian.acuitypro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -473,7 +473,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F10004 /* Build configuration list for PBXNativeTarget "ClearSight" */ = {
+		F10004 /* Build configuration list for PBXNativeTarget "AcuityPro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				G10003 /* Debug */,
@@ -482,7 +482,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F10005 /* Build configuration list for PBXProject "ClearSight" */ = {
+		F10005 /* Build configuration list for PBXProject "AcuityPro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				G10001 /* Debug */,

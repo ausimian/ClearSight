@@ -1,4 +1,4 @@
-# ClearSight
+# AcuityPro
 
 A native iOS app that uses ARKit's TrueDepth (Face ID) camera to simulate a clinical Snellen eye test. The app measures your real-time distance from the screen, presents correctly-scaled chart letters, and guides you through a standardised visual acuity test for each eye.
 
@@ -50,7 +50,7 @@ An undo button lets you correct misrecognised letters without restarting the row
 **MVVM + Service Layer** — SwiftUI views, ObservableObject view models, and service classes for ARKit, speech, distance measurement, and scoring.
 
 ```
-ClearSight/
+AcuityPro/
 ├── App/                    # Entry point
 ├── Features/
 │   ├── Onboarding/         # Permissions, device check
@@ -71,13 +71,13 @@ ClearSight/
 
 ```bash
 # Build for device
-xcodebuild -project ClearSight.xcodeproj -scheme ClearSight \
+xcodebuild -project AcuityPro.xcodeproj -scheme AcuityPro \
   -destination 'platform=iOS,name=YouriPhone' \
   -allowProvisioningUpdates build
 
 # Install on device
 xcrun devicectl device install app --device <DEVICE_ID> \
-  path/to/Build/Products/Debug-iphoneos/ClearSight.app
+  path/to/Build/Products/Debug-iphoneos/AcuityPro.app
 ```
 
 Set your development team in Xcode's Signing & Capabilities before building.

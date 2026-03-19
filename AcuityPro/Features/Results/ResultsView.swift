@@ -36,7 +36,7 @@ struct ResultsView: View {
                 VStack(spacing: 12) {
                     ShareLink(
                         item: result.shareSummary,
-                        preview: SharePreview("ClearSight Results", image: Image(systemName: "eye.circle"))
+                        preview: SharePreview("AcuityPro Results", image: Image(systemName: "eye.circle"))
                     ) {
                         Label("Share Results", systemImage: "square.and.arrow.up")
                             .font(.headline)
